@@ -1,0 +1,27 @@
+var namespacedsp =
+[
+    [ "BartlettGenerator", "classdsp_1_1_bartlett_generator.html", "classdsp_1_1_bartlett_generator" ],
+    [ "BlackmanGenerator", "classdsp_1_1_blackman_generator.html", "classdsp_1_1_blackman_generator" ],
+    [ "ComplexFFT", "classdsp_1_1_complex_f_f_t.html", "classdsp_1_1_complex_f_f_t" ],
+    [ "ExactBlackmanGenerator", "classdsp_1_1_exact_blackman_generator.html", "classdsp_1_1_exact_blackman_generator" ],
+    [ "FftConvolve", "classdsp_1_1_fft_convolve.html", "classdsp_1_1_fft_convolve" ],
+    [ "FilterHolder", "classdsp_1_1_filter_holder.html", "classdsp_1_1_filter_holder" ],
+    [ "FlatTop1Generator", "classdsp_1_1_flat_top1_generator.html", "classdsp_1_1_flat_top1_generator" ],
+    [ "FlatTop2Generator", "classdsp_1_1_flat_top2_generator.html", "classdsp_1_1_flat_top2_generator" ],
+    [ "FlatTop3Generator", "classdsp_1_1_flat_top3_generator.html", "classdsp_1_1_flat_top3_generator" ],
+    [ "FlatTop4Generator", "classdsp_1_1_flat_top4_generator.html", "classdsp_1_1_flat_top4_generator" ],
+    [ "FlatTop5Generator", "classdsp_1_1_flat_top5_generator.html", "classdsp_1_1_flat_top5_generator" ],
+    [ "FlatTop6Generator", "classdsp_1_1_flat_top6_generator.html", "classdsp_1_1_flat_top6_generator" ],
+    [ "FlatTop7Generator", "classdsp_1_1_flat_top7_generator.html", "classdsp_1_1_flat_top7_generator" ],
+    [ "HammingGenerator", "classdsp_1_1_hamming_generator.html", "classdsp_1_1_hamming_generator" ],
+    [ "HannGenerator", "classdsp_1_1_hann_generator.html", "classdsp_1_1_hann_generator" ],
+    [ "KaiserGenerator", "classdsp_1_1_kaiser_generator.html", "classdsp_1_1_kaiser_generator" ],
+    [ "LanczosGenerator", "classdsp_1_1_lanczos_generator.html", "classdsp_1_1_lanczos_generator" ],
+    [ "MagnitudeFft", "classdsp_1_1_magnitude_fft.html", "classdsp_1_1_magnitude_fft" ],
+    [ "RectangleGenerator", "structdsp_1_1_rectangle_generator.html", "structdsp_1_1_rectangle_generator" ],
+    [ "Resample", "classdsp_1_1_resample.html", "classdsp_1_1_resample" ],
+    [ "Statistics", "structdsp_1_1_statistics.html", "structdsp_1_1_statistics" ],
+    [ "ThreeBinSumFft", "classdsp_1_1_three_bin_sum_fft.html", "classdsp_1_1_three_bin_sum_fft" ],
+    [ "ToneParams", "structdsp_1_1_tone_params.html", "structdsp_1_1_tone_params" ],
+    [ "WindowFunction", "classdsp_1_1_window_function.html", "classdsp_1_1_window_function" ]
+];

@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['testbessel',['TestBessel',['../namespacedsp.html#a23a1d4e6f80878b31edd6d5bbd0ca7dc',1,'dsp']]],
+  ['testcomplexfftto3binsum',['TestComplexFftTo3BinSum',['../namespacedsp.html#ab4d048fb6b4ce26dc532d359882c8fef',1,'dsp']]],
+  ['testcomplexffttomagnitude',['TestComplexFftToMagnitude',['../namespacedsp.html#ac40bbef02597fc124419b03813448168',1,'dsp']]],
+  ['testconvolve',['TestConvolve',['../namespacedsp.html#a0e964ddb5f6d41f44721c7c03c27d33c',1,'dsp']]],
+  ['testfilters1',['TestFilters1',['../namespacedsp.html#ab3a3f99d346a427a7f9003560cfcd10d',1,'dsp']]],
+  ['testfilters2',['TestFilters2',['../namespacedsp.html#a711009120914199be91f134330ee7824',1,'dsp']]],
+  ['testgcd',['TestGcd',['../namespacedsp.html#a00bd87395ee5e1a64cb4cc4e65f1f0e2',1,'dsp']]],
+  ['testresampling1',['TestResampling1',['../namespacedsp.html#a7b97011f082dece805c960a9e7d586e8',1,'dsp']]],
+  ['testresampling2',['TestResampling2',['../namespacedsp.html#adb365fe452a2c53e0f2bf04367e373c5',1,'dsp']]],
+  ['testsinc',['TestSinc',['../namespacedsp.html#a9aee554162d276fb24093aa2ae5791de',1,'dsp']]],
+  ['testsine',['TestSine',['../namespacedsp.html#ae2b858e00844e40aff76cbed1fd2f908',1,'dsp']]],
+  ['testwindowfunction',['TestWindowFunction',['../namespacedsp.html#a4b69dcb40aedc136b256945770a35998',1,'dsp']]],
+  ['threebinsumfft',['ThreeBinSumFft',['../classdsp_1_1_three_bin_sum_fft.html#a28ff2b86b936e4f0c1e835cd1029d7c8',1,'dsp::ThreeBinSumFft::ThreeBinSumFft()=default'],['../classdsp_1_1_three_bin_sum_fft.html#ae396e5ee169624318412a26bb6957df1',1,'dsp::ThreeBinSumFft::ThreeBinSumFft(ThreeBinSumFft const &amp;)=default'],['../classdsp_1_1_three_bin_sum_fft.html#a55a072443504cfe897f4f7b41d7db085',1,'dsp::ThreeBinSumFft::ThreeBinSumFft(ThreeBinSumFft &amp;&amp;)=default'],['../classdsp_1_1_three_bin_sum_fft.html#a215cccf45752e8e567597748a866ee73',1,'dsp::ThreeBinSumFft::ThreeBinSumFft(Generator const &amp;generator, size_t fftSize)']]],
+  ['threeovertwopi',['ThreeOverTwoPi',['../namespacedsp.html#a8d1e92b8ef682af2b5174b57173c9033',1,'dsp']]],
+  ['to3binsum',['To3BinSum',['../classdsp_1_1_complex_f_f_t.html#ab0058b743afda29ae8a25f26375ee2ad',1,'dsp::ComplexFFT::To3BinSum(complex_vector &amp;powerSpectrum, bool zeroUnused=false)'],['../classdsp_1_1_complex_f_f_t.html#ae3edcaf9ab07f5d201e00083de623e01',1,'dsp::ComplexFFT::To3BinSum(real_vector &amp;powerSpectrum)'],['../classdsp_1_1_complex_f_f_t.html#a7b1b85f961a4c8b4a16fade4b242f62a',1,'dsp::ComplexFFT::To3BinSum(complex_vector const &amp;powerSpectrum, real_vector &amp;magFft)'],['../classdsp_1_1_complex_f_f_t.html#a045c8919dee0800e9fc97d41e3a8611a',1,'dsp::ComplexFFT::To3BinSum(real_vector const &amp;powerSpectrum, real_vector &amp;magFft)']]],
+  ['tomagnitude',['ToMagnitude',['../classdsp_1_1_complex_f_f_t.html#a3d136a47a5970e836cc23e74cd339cb6',1,'dsp::ComplexFFT::ToMagnitude(complex_vector &amp;cplxFft, bool zeroUnused=false)'],['../classdsp_1_1_complex_f_f_t.html#ade5f763a9a11f401584bc94c0817c466',1,'dsp::ComplexFFT::ToMagnitude(complex_vector const &amp;cplxFft, real_vector &amp;magFft)']]],
+  ['tone',['Tone',['../namespacedsp.html#ab8973823b8295be7ca30dbd10404189e',1,'dsp']]],
+  ['topower',['ToPower',['../classdsp_1_1_complex_f_f_t.html#a9cc2a00ac168d8b730dba3d45d778bb0',1,'dsp::ComplexFFT::ToPower(complex_vector &amp;cplxFft, bool zeroUnused=false)'],['../classdsp_1_1_complex_f_f_t.html#ac974cdf02034da4ccd59a59511373d79',1,'dsp::ComplexFFT::ToPower(complex_vector const &amp;cplxFft, real_vector &amp;powerSpectrum)']]],
+  ['topsd',['ToPsd',['../classdsp_1_1_complex_f_f_t.html#aef7bcc647c0648ecd7e1bda340915859',1,'dsp::ComplexFFT::ToPsd(complex_vector &amp;powerSpectrum, FloatType binWidthHz, bool zeroUnused=false)'],['../classdsp_1_1_complex_f_f_t.html#ad1e1cfc4dcd73c3799f70cc9218ef8b0',1,'dsp::ComplexFFT::ToPsd(real_vector &amp;powerSpectrum, FloatType binWidthHz)'],['../classdsp_1_1_complex_f_f_t.html#a65bfce3b8a7709b147bfec5c12ff61ad',1,'dsp::ComplexFFT::ToPsd(complex_vector const &amp;powerSpectrum, FloatType binWidthHz, real_vector &amp;psd)'],['../classdsp_1_1_complex_f_f_t.html#aab4d4d0bf8ee46c958eef44062456213',1,'dsp::ComplexFFT::ToPsd(const real_vector &amp;powerSpectrum, FloatType binWidthHz, real_vector &amp;psd)']]],
+  ['twooverpi',['TwoOverPi',['../namespacedsp.html#ab75f5187d9b67f805c98ad11fbfcd89f',1,'dsp']]],
+  ['twooversqrtpi',['TwoOverSqrtPi',['../namespacedsp.html#a3afc58f3466cf6e681e4b2535779f40d',1,'dsp']]],
+  ['twopi',['TwoPi',['../namespacedsp.html#a7c63282d43e70722e490057dd4f04cb8',1,'dsp']]],
+  ['twosqrttwo',['TwoSqrtTwo',['../namespacedsp.html#af0c560ecd43f53c4f2e3a10841b90167',1,'dsp']]]
+];
