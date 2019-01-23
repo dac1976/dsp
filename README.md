@@ -15,8 +15,8 @@ Any compatible C++14 compiler can be used. The code is header only and has no ex
 The library contains classes and helper functions for the following.
 
 * Mathematical Utilties: discrete convolution, Bessel function, Sinc functions, Sinusoidal function, GCD (greatest common divisor), power of 2 checker.
-* Pi: Multi-precision static template fuctions to generate variants of Pi, e.g. Pi, 2Pi, Pi/2 etc.
-* Roots: Multi-precision static template fuctions to generate variants of Sqrt(2), e.g. Sqrt(2), 2Sqrt, 1/Sqrt(2) etc. 
+* Pi: Multi-precision static template functions to generate variants of Pi, e.g. Pi, 2Pi, Pi/2 etc.
+* Roots: Multi-precision static template functions to generate variants of Sqrt(2), e.g. Sqrt(2), 2Sqrt, 1/Sqrt(2) etc. 
 * Signal Generators: template functions to generate single- and multi-tone sinusoidal signals.
 * Window Functions: template functions and functors to evaluate window functions and generate coefficients, e.g. flat-top, Hann, Hamming, rectangle, sinc, Bartlett, Blackman, Kaiser and Lanczos.
 * Filters: template functions and functors to compute FIR filter coeffcients, e.g. low-, high-, band-pass and notch filters.
