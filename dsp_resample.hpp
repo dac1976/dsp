@@ -47,7 +47,7 @@ namespace dsp
  * bound either side of the requiredResampleFactor until the termination conditions are
  * met and a suitable pair of resample factors is found.
  */
-std::pair<size_t, size_t> ComputeResampleFactors(double requiredResampleFactor,
+inline std::pair<size_t, size_t> ComputeResampleFactors(double requiredResampleFactor,
                                                  size_t maxNumerator   = 128,
                                                  size_t maxDenominator = 128)
 {
