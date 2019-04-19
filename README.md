@@ -31,4 +31,4 @@ The code is commented using Doxygen style comments so check the documentation in
 For usage examples I recommend looking at the unit test code in the file "test_main.cpp".
 
 ## Comments ##
-I'll fix bugs and improve the code when necessary but make no guarantees on how often this happens. I provide no warranty or support for any issues that are encountered while using it. Although if you are really stuck email me at the provided address and if I have the time I will try to help or fix the issue if it's within my power to do so
+I'll fix bugs and improve the code when necessary but make no guarantees on how often this happens. I provide no warranty or support for any issues that are encountered while using it. Although if you are really stuck email me at the provided address and if I have the time I will try to help or fix the issue if it's within my power to do so.
