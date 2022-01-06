@@ -62,7 +62,7 @@ public:
      * \param[in] first - iterator to start of data samples.
      * \param[in] last - iterator to one past the end of the data samples.
      *
-     * Input data range must be implicitly convertable to std::complex<FloatType>.
+     * Input data range must be implicitly convertible to std::complex<FloatType>.
      */
     template <typename Iter> static complex_vector Forward(Iter first, Iter last)
     {
@@ -159,19 +159,22 @@ public:
      * \brief Convert complex FFT data to a magnitude only spectrum in-place.
      * \param[in] cplxFft - complex data vector containing normalised complex FFT.
      * \param[in] zeroUnused - zero unused BINs in complex vector.
+     * \param[in] fullSpectrum - keep the full spectrum.
      *
      * After calling this only the real part of each complex value
-     * is valid, the imaginary part will be 0 because the power is
-     * spread over a positive and negative half spectrum we multiply
+     * is valid, the imaginary part will be 0. Also because the power
+     * is spread over a positive and negative half spectra we multiply
      * the value in each BIN by 2 to get the correct amplitude. The
-     * negative half of the FFT is not for use so only the first N/2
-     * values represent the real FFT spectrum.
+     * negative half of the FFT is not needed unless we want the full
+     * spectrum so if we only want the half spectrum we use so only the
+     * first N/2 values.
      */
-    static void ToMagnitude(complex_vector& cplxFft, bool zeroUnused = false)
+    static void ToMagnitude(complex_vector& cplxFft, bool zeroUnused = false,
+                            bool fullSpectrum = false)
     {
         static constexpr auto two      = static_cast<FloatType>(2);
         static constexpr auto zero     = static_cast<FloatType>(0);
-        auto                  halfSize = cplxFft.size() / 2;
+        auto                  halfSize = fullSpectrum ? cplxFft.size() : cplxFft.size() / 2;
         auto                  endItr   = std::next(cplxFft.begin(), static_cast<int32_t>(halfSize));
 
         for (auto zItr = cplxFft.begin(); zItr != endItr; ++zItr)
@@ -201,11 +204,13 @@ public:
      * \brief Convert complex FFT data to a magnitude only spectrum.
      * \param[in] cplxFft - complex data vector containing normalised complex FFT.
      * \param[out] magFft - The magnitude only spectrum as a real valued vector.
+     * \param[in] fullSpectrum - keep the full spectrum.
      */
-    static void ToMagnitude(complex_vector const& cplxFft, real_vector& magFft)
+    static void ToMagnitude(complex_vector const& cplxFft, real_vector& magFft,
+                            bool fullSpectrum = false)
     {
         static constexpr auto two      = static_cast<FloatType>(2);
-        auto                  halfSize = cplxFft.size() / 2;
+        auto                  halfSize = fullSpectrum ? cplxFft.size() : cplxFft.size() / 2;
         auto                  endItr   = std::next(cplxFft.begin(), static_cast<int32_t>(halfSize));
         magFft.resize(halfSize);
         size_t index = 0;
@@ -229,16 +234,18 @@ public:
      * \brief Convert complex FFT data to power spectrum in-place.
      * \param[in] cplxFft - complex data vector containing normalised complex FFT.
      * \param[in] zeroUnused - zero unused BINs in complex vector.
+     * \param[in] fullSpectrum - keep the full spectrum.
      *
      * The power spectrum is computed as re[n]^2 + im[n]^2. Only the real
      * part of each complex value is valid, the imaginary part will be 0.
-     * The negative half of the FFT is discarded so only the first N/2 values
-     * represent the real FFT spectrum.
+     * The negative half of the FFT is not needed unless we want the full
+     * spectrum so if we only want the half spectrum we use so only the
+     * first N/2 values.
      */
-    static void ToPower(complex_vector& cplxFft, bool zeroUnused = false)
+    static void ToPower(complex_vector& cplxFft, bool zeroUnused = false, bool fullSpectrum = false)
     {
         static constexpr auto zero     = static_cast<FloatType>(0);
-        auto                  halfSize = cplxFft.size() / 2;
+        auto                  halfSize = fullSpectrum ? cplxFft.size() : cplxFft.size() / 2;
         auto                  endItr   = std::next(cplxFft.begin(), static_cast<int32_t>(halfSize));
 
         for (auto zItr = cplxFft.begin(); zItr != endItr; ++zItr)
@@ -261,10 +268,12 @@ public:
      * \brief Convert complex FFT data to power spectrum.
      * \param[in] cplxFft - complex data vector containing normalised complex FFT.
      * \param[out] powerSpectrum - The power spectrum as a real valued vector.
+     * \param[in] fullSpectrum - keep the full spectrum.
      */
-    static void ToPower(complex_vector const& cplxFft, real_vector& powerSpectrum)
+    static void ToPower(complex_vector const& cplxFft, real_vector& powerSpectrum,
+                        bool fullSpectrum = false)
     {
-        auto halfSize = cplxFft.size() / 2;
+        auto halfSize = fullSpectrum ? cplxFft.size() : cplxFft.size() / 2;
         auto endItr   = std::next(cplxFft.begin(), static_cast<int32_t>(halfSize));
         powerSpectrum.resize(halfSize);
         size_t index = 0;
@@ -280,16 +289,20 @@ public:
      * \param[in] powerSpectrum - complex data vector containing the power spectrum.
      * \param[in] binWidthHz - the bin width in Hz of the spectral data.
      * \param[in] zeroUnused - zero unused BINs in complex vector.
+     * \param[in] fullSpectrum - keep the full spectrum.
      *
      * The real valued power spectrum stored in a complex vector
      * is converted to PSD values by dividing by BIN width. After
-     * calling this function the powerSpectrum contains the PSD in
-     * its real components of first N/2 elements.
+     * calling this function the half powerSpectrum contains the PSD in
+     * its real components. The negative half of the FFT is not needed
+     * unless we want the full spectrum so if we only want the half spectrum
+     * we use so only the first N/2 values.
      */
-    static void ToPsd(complex_vector& powerSpectrum, FloatType binWidthHz, bool zeroUnused = false)
+    static void ToPsd(complex_vector& powerSpectrum, FloatType binWidthHz, bool zeroUnused = false,
+                      bool fullSpectrum = false)
     {
-        static constexpr auto zero     = static_cast<FloatType>(0);
-        auto                  halfSize = powerSpectrum.size() / 2;
+        static constexpr auto zero = static_cast<FloatType>(0);
+        auto halfSize              = fullSpectrum ? powerSpectrum.size() : powerSpectrum.size() / 2;
         auto endItr = std::next(powerSpectrum.begin(), static_cast<int32_t>(halfSize));
 
         for (auto psIter = powerSpectrum.begin(); psIter != endItr; std::advance(psIter, 1))
@@ -309,7 +322,7 @@ public:
 
     /*!
      * \brief Convert power spectrum to PSD (power spectral density) in-place.
-     * \param[in] powerSpectrum - real valued data vector containing te power spectrum.
+     * \param[in] powerSpectrum - real valued data vector containing the power spectrum.
      * \param[in] binWidthHz - the bin width in Hz of the spectral data.
      *
      * After this function is called the powerSpectrum will contain the PSD values.
@@ -329,13 +342,17 @@ public:
      * \param[in] powerSpectrum - complex data vector containing the power spectrum.
      * \param[in] binWidthHz - the bin width in Hz of the spectral data.
      * \param[out] psd - the real valued vector containing the PSD values.
+     * \param[in] fullSpectrum - keep the full spectrum.
      *
-     * The real valued power spectrum stored in a complex vector
-     * is converted to PSD values by dividing by BIN width.
+     * The real valued power spectrum stored in a complex vector is converted to
+     * PSD values by dividing by BIN width. The negative half of the FFT is not
+     * needed  unless we want the full spectrum so if we only want the half spectrum
+     * we use so only the first N/2 values.
      */
-    static void ToPsd(complex_vector const& powerSpectrum, FloatType binWidthHz, real_vector& psd)
+    static void ToPsd(complex_vector const& powerSpectrum, FloatType binWidthHz, real_vector& psd,
+                      bool fullSpectrum = false)
     {
-        auto halfSize = powerSpectrum.size() / 2;
+        auto halfSize = fullSpectrum ? powerSpectrum.size() : powerSpectrum.size() / 2;
         auto endItr   = std::next(powerSpectrum.begin(), static_cast<int32_t>(halfSize));
         psd.resize(halfSize);
         size_t index = 0;
@@ -372,20 +389,24 @@ public:
      * \brief Convert power spectrum to 3 BIN summed magnitude spectrum in-place.
      * \param[in] powerSpectrum - complex data vector containing the power spectrum.
      * \param[in] zeroUnused - zero unused BINs in complex vector.
+     * \param[in] fullSpectrum - keep the full spectrum.
      *
      * The real valued power spectrum stored in a complex vector
      * is converted to 3-BIN summed magnitude spectrum. After
      * calling this function the powerSpectrum contains the result in
-     * its real components of first N/2 elements.
+     * its real components. The negative half of the FFT is not needed
+     * unless we want the full spectrum so if we only want the half spectrum
+     * we use so only the first N/2 values.
      */
-    static void To3BinSum(complex_vector& powerSpectrum, bool zeroUnused = false)
+    static void To3BinSum(complex_vector& powerSpectrum, bool zeroUnused = false,
+                          bool fullSpectrum = false)
     {
-        static constexpr auto       one      = static_cast<FloatType>(1);
-        static constexpr auto       zero     = static_cast<FloatType>(0);
-        static const auto           sqrt2    = dsp::SqrtTwo<FloatType>();
-        static const complex_vector convVec  = {{one, zero}, {one, zero}, {one, zero}};
-        auto                        halfSize = powerSpectrum.size() / 2;
-        auto           endItr = std::next(powerSpectrum.begin(), static_cast<int32_t>(halfSize));
+        static constexpr auto       one     = static_cast<FloatType>(1);
+        static constexpr auto       zero    = static_cast<FloatType>(0);
+        static const auto           sqrt2   = dsp::SqrtTwo<FloatType>();
+        static const complex_vector convVec = {{one, zero}, {one, zero}, {one, zero}};
+        auto           halfSize = fullSpectrum ? powerSpectrum.size() : powerSpectrum.size() / 2;
+        auto           endItr   = std::next(powerSpectrum.begin(), static_cast<int32_t>(halfSize));
         complex_vector convRes(halfSize + convVec.size() - 1);
 
         Convolve(powerSpectrum.begin(), endItr, convVec.begin(), convVec.end(), convRes.begin());
@@ -413,7 +434,7 @@ public:
 
     /*!
      * \brief Convert power spectrum to 3 BIN summed magnitude spectrum in-place.
-     * \param[in] powerSpectrum - real valued data vector containing te power spectrum.
+     * \param[in] powerSpectrum - real valued data vector containing the power spectrum.
      *
      * After this function is called the powerSpectrum will contain the 3 BIN summed
      * magnitude values.
@@ -445,18 +466,22 @@ public:
      * \brief Convert power spectrum to 3 BIN summed magnitude spectrum.
      * \param[in] powerSpectrum - complex data vector containing the power spectrum.
      * \param[out] magFft - the real valued vector containing the 3 BIN summed values.
+     * \param[in] fullSpectrum - keep the full spectrum.
      *
-     * The real valued power spectrum stored in a complex vector
-     * is converted to 3 BIN summed magnitude values.
+     * The real valued power spectrum stored in a complex vector is converted to
+     * 3 BIN summed magnitude values. The negative half of the FFT is not needed
+     * unless we want the full spectrum so if we only want the half spectrum
+     * we use so only the first N/2 values.
      */
-    static void To3BinSum(complex_vector const& powerSpectrum, real_vector& magFft)
+    static void To3BinSum(complex_vector const& powerSpectrum, real_vector& magFft,
+                          bool fullSpectrum = false)
     {
-        static constexpr auto       one      = static_cast<FloatType>(1);
-        static constexpr auto       zero     = static_cast<FloatType>(0);
-        static const complex_vector convVec  = {{one, zero}, {one, zero}, {one, zero}};
-        auto                        sqrt2    = dsp::SqrtTwo<FloatType>();
-        auto                        halfSize = powerSpectrum.size() / 2;
-        auto           endItr = std::next(powerSpectrum.begin(), static_cast<int32_t>(halfSize));
+        static constexpr auto       one     = static_cast<FloatType>(1);
+        static constexpr auto       zero    = static_cast<FloatType>(0);
+        static const complex_vector convVec = {{one, zero}, {one, zero}, {one, zero}};
+        auto                        sqrt2   = dsp::SqrtTwo<FloatType>();
+        auto           halfSize = fullSpectrum ? powerSpectrum.size() : powerSpectrum.size() / 2;
+        auto           endItr   = std::next(powerSpectrum.begin(), static_cast<int32_t>(halfSize));
         complex_vector convRes(halfSize + convVec.size() - 1);
         magFft.resize(halfSize);
 
@@ -618,10 +643,12 @@ public:
      * \brief Perform the FFT on the real-valued signal data samples.
      * \param[in] signalFirst - iterator to first sample of signal data.
      * \param[in] signalLast - iterator to one past the last sample of signal data.
-     * \param[in] realSpectra - real-valued vectore to hold result spectrum.
+     * \param[in] realSpectra - real-valued vector to hold result spectrum.
+     * \param[in] fullSpectrum - keep the full spectrum.
      */
     template <typename Iter>
-    void operator()(Iter signalFirst, Iter signalLast, real_vector& realSpectra)
+    void operator()(Iter signalFirst, Iter signalLast, real_vector& realSpectra,
+                    bool fullSpectrum = false)
     {
         auto signalLength = std::distance(signalFirst, signalLast);
         DSP_ASSERT_THROW(signalLength == static_cast<decltype(signalLength)>(m_workspace.size()),
@@ -645,7 +672,7 @@ public:
 
         // Convert FFT spectrum to power spectrum, converting to real valued vector
         // as this speeds up amount of processing that needs doing below.
-        complex_fft::ToPower(m_workspace, realSpectra);
+        complex_fft::ToPower(m_workspace, realSpectra, fullSpectrum);
 
         // Apply window gain correction and normalisation to power spectrum.
         auto normScalar = static_cast<FloatType>(m_workspace.size() * m_workspace.size());
@@ -661,9 +688,12 @@ public:
     /*!
      * \brief Perform the FFT on the complex signal data samples.
      * \param[in] signal - vector of complex signal data.
-     * \param[in] realSpectra - real-valued vectore to hold result spectrum.
+     * \param[in] realSpectra - real-valued vector to hold result spectrum.
+     * \param[in] fullSpectrum - keep the full spectrum.
      */
-    template <typename Iter> void operator()(complex_vector const& signal, real_vector& realSpectra)
+    template <typename Iter>
+    void operator()(complex_vector const& signal, real_vector& realSpectra,
+                    bool fullSpectrum = false)
     {
         DSP_ASSERT_THROW(signal.size() == m_workspace.size(), "signal length is incorrect");
 
@@ -680,7 +710,7 @@ public:
 
         // Convert FFT spectrum to power spectrum, converting to real valued vector
         // as this speeds up amount of processing that needs doing below.
-        complex_fft::ToPower(m_workspace, realSpectra);
+        complex_fft::ToPower(m_workspace, realSpectra, fullSpectrum);
 
         // Apply window gain correction and normalisation to power spectrum.
         auto normScalar = static_cast<FloatType>(m_workspace.size() * m_workspace.size());
@@ -755,10 +785,12 @@ public:
      * \brief Perform the FFT on the real-valued signal data samples.
      * \param[in] signalFirst - iterator to first sample of signal data.
      * \param[in] signalLast - iterator to one past the last sample of signal data.
-     * \param[in] realSpectra - real-valued vectore to hold result spectrum.
+     * \param[in] realSpectra - real-valued vector to hold result spectrum.
+     * \param[in] fullSpectrum - keep the full spectrum.
      */
     template <typename Iter>
-    void operator()(Iter signalFirst, Iter signalLast, real_vector& realSpectra)
+    void operator()(Iter signalFirst, Iter signalLast, real_vector& realSpectra,
+                    bool fullSpectrum = false)
     {
         auto signalLength = std::distance(signalFirst, signalLast);
         DSP_ASSERT_THROW(signalLength == static_cast<decltype(signalLength)>(m_workspace.size()),
@@ -782,7 +814,7 @@ public:
 
         // Convert FFT spectrum to power spectrum, converting to real valued vector
         // as this speeds up amount of processing that needs doing below.
-        complex_fft::ToMagnitude(m_workspace, realSpectra);
+        complex_fft::ToMagnitude(m_workspace, realSpectra, fullSpectrum);
 
         // Apply window gain correction and normalisation to power spectrum.
         auto normScalar = static_cast<FloatType>(m_workspace.size());
@@ -795,9 +827,12 @@ public:
     /*!
      * \brief Perform the FFT on the complex signal data samples.
      * \param[in] signal - vector of complex signal data.
-     * \param[in] realSpectra - real-valued vectore to hold result spectrum.
+     * \param[in] realSpectra - real-valued vector to hold result spectrum.
+     * \param[in] fullSpectrum - keep the full spectrum.
      */
-    template <typename Iter> void operator()(complex_vector const& signal, real_vector& realSpectra)
+    template <typename Iter>
+    void operator()(complex_vector const& signal, real_vector& realSpectra,
+                    bool fullSpectrum = false)
     {
         DSP_ASSERT_THROW(signal.size() == m_workspace.size(), "signal length is incorrect");
 
@@ -814,7 +849,7 @@ public:
 
         // Convert FFT spectrum to power spectrum, converting to real valued vector
         // as this speeds up amount of processing that needs doing below.
-        complex_fft::ToMagnitude(m_workspace, realSpectra);
+        complex_fft::ToMagnitude(m_workspace, realSpectra, fullSpectrum);
 
         // Apply window gain correction and normalisation to power spectrum.
         auto normScalar = static_cast<FloatType>(m_workspace.size());
@@ -915,7 +950,7 @@ public:
         // which we use a single FFT for the convolution but if data length requires
         // an FFT above the size limit we break down into a series of smaller FFTs
         // based on picking an FFT size bigger than the shortest data range but with
-        // enough spare samples to sebnsibly convolve with the other data range.
+        // enough spare samples to sensibly convolve with the other data range.
         // We probably in this case want to say range 1 should always be the
         // source data and range 2 is the kernel to be convolved with, e.g. the filter
         // kernel.
