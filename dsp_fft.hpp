@@ -598,8 +598,8 @@ public:
      */
     template <typename Generator>
     ThreeBinSumFft(Generator const& generator, size_t fftSize)
-        : m_workspace(fftSize)
-        , m_windowFunction(generator, fftSize + 1, true)
+        : m_windowFunction(generator, fftSize + 1, true)
+        , m_workspace(fftSize)
     {
         DSP_ASSERT_THROW(IsPowerOf2(fftSize), "FFT size not a power of 2");
     }
