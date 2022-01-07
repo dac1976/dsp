@@ -643,12 +643,13 @@ public:
      * \brief Perform the FFT on the real-valued signal data samples.
      * \param[in] signalFirst - iterator to first sample of signal data.
      * \param[in] signalLast - iterator to one past the last sample of signal data.
-     * \param[in] realSpectra - real-valued vector to hold result spectrum.
+     * \param[out] realSpectra - real-valued vector to hold result spectrum.
      * \param[in] fullSpectrum - keep the full spectrum.
+     * \param[out] phases - (optional) bin by bin spectrum phases.
      */
     template <typename Iter>
     void operator()(Iter signalFirst, Iter signalLast, real_vector& realSpectra,
-                    bool fullSpectrum = false)
+                    bool fullSpectrum = false, real_vector* phases = nullptr)
     {
         auto signalLength = std::distance(signalFirst, signalLast);
         DSP_ASSERT_THROW(signalLength == static_cast<decltype(signalLength)>(m_workspace.size()),
@@ -674,6 +675,17 @@ public:
         // as this speeds up amount of processing that needs doing below.
         complex_fft::ToPower(m_workspace, realSpectra, fullSpectrum);
 
+        // Compute phases if required.
+        if (nullptr != phases)
+        {
+            phases->resize(realSpectra.size());
+
+            for (size_t i = 0; i < phases->size(); ++i)
+            {
+                (*phases)[i] = std::arg(m_workspace[i]);
+            }
+        }
+
         // Apply window gain correction and normalisation to power spectrum.
         auto normScalar = static_cast<FloatType>(m_workspace.size() * m_workspace.size());
         window_fn::ApplyGainCorrection(realSpectra.begin(),
@@ -688,12 +700,12 @@ public:
     /*!
      * \brief Perform the FFT on the complex signal data samples.
      * \param[in] signal - vector of complex signal data.
-     * \param[in] realSpectra - real-valued vector to hold result spectrum.
+     * \param[out] realSpectra - real-valued vector to hold result spectrum.
      * \param[in] fullSpectrum - keep the full spectrum.
+     * \param[out] phases - (optional) bin by bin spectrum phases.
      */
-    template <typename Iter>
     void operator()(complex_vector const& signal, real_vector& realSpectra,
-                    bool fullSpectrum = false)
+                    bool fullSpectrum = false, real_vector* phases = nullptr)
     {
         DSP_ASSERT_THROW(signal.size() == m_workspace.size(), "signal length is incorrect");
 
@@ -711,6 +723,17 @@ public:
         // Convert FFT spectrum to power spectrum, converting to real valued vector
         // as this speeds up amount of processing that needs doing below.
         complex_fft::ToPower(m_workspace, realSpectra, fullSpectrum);
+
+        // Compute phases if required.
+        if (nullptr != phases)
+        {
+            phases->resize(realSpectra.size());
+
+            for (size_t i = 0; i < phases->size(); ++i)
+            {
+                (*phases)[i] = std::arg(m_workspace[i]);
+            }
+        }
 
         // Apply window gain correction and normalisation to power spectrum.
         auto normScalar = static_cast<FloatType>(m_workspace.size() * m_workspace.size());
@@ -785,12 +808,13 @@ public:
      * \brief Perform the FFT on the real-valued signal data samples.
      * \param[in] signalFirst - iterator to first sample of signal data.
      * \param[in] signalLast - iterator to one past the last sample of signal data.
-     * \param[in] realSpectra - real-valued vector to hold result spectrum.
+     * \param[out] realSpectra - real-valued vector to hold result spectrum.
      * \param[in] fullSpectrum - keep the full spectrum.
+     * \param[out] phases - (optional) bin by bin spectrum phases.
      */
     template <typename Iter>
     void operator()(Iter signalFirst, Iter signalLast, real_vector& realSpectra,
-                    bool fullSpectrum = false)
+                    bool fullSpectrum = false, real_vector* phases = nullptr)
     {
         auto signalLength = std::distance(signalFirst, signalLast);
         DSP_ASSERT_THROW(signalLength == static_cast<decltype(signalLength)>(m_workspace.size()),
@@ -816,6 +840,17 @@ public:
         // as this speeds up amount of processing that needs doing below.
         complex_fft::ToMagnitude(m_workspace, realSpectra, fullSpectrum);
 
+        // Compute phases if required.
+        if (nullptr != phases)
+        {
+            phases->resize(realSpectra.size());
+
+            for (size_t i = 0; i < phases->size(); ++i)
+            {
+                (*phases)[i] = std::arg(m_workspace[i]);
+            }
+        }
+
         // Apply window gain correction and normalisation to power spectrum.
         auto normScalar = static_cast<FloatType>(m_workspace.size());
         window_fn::ApplyGainCorrection(realSpectra.begin(),
@@ -827,12 +862,12 @@ public:
     /*!
      * \brief Perform the FFT on the complex signal data samples.
      * \param[in] signal - vector of complex signal data.
-     * \param[in] realSpectra - real-valued vector to hold result spectrum.
+     * \param[out] realSpectra - real-valued vector to hold result spectrum.
      * \param[in] fullSpectrum - keep the full spectrum.
+     * \param[out] phases - (optional) bin by bin spectrum phases.
      */
-    template <typename Iter>
     void operator()(complex_vector const& signal, real_vector& realSpectra,
-                    bool fullSpectrum = false)
+                    bool fullSpectrum = false, real_vector* phases = nullptr)
     {
         DSP_ASSERT_THROW(signal.size() == m_workspace.size(), "signal length is incorrect");
 
@@ -850,6 +885,17 @@ public:
         // Convert FFT spectrum to power spectrum, converting to real valued vector
         // as this speeds up amount of processing that needs doing below.
         complex_fft::ToMagnitude(m_workspace, realSpectra, fullSpectrum);
+
+        // Compute phases if required.
+        if (nullptr != phases)
+        {
+            phases->resize(realSpectra.size());
+
+            for (size_t i = 0; i < phases->size(); ++i)
+            {
+                (*phases)[i] = std::arg(m_workspace[i]);
+            }
+        }
 
         // Apply window gain correction and normalisation to power spectrum.
         auto normScalar = static_cast<FloatType>(m_workspace.size());
