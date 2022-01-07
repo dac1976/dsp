@@ -38,7 +38,7 @@ namespace dsp
 
 /*!
  * \brief Compute closest resample up and down factors given a real valued resample factor.
- * \param[in] requiredResampleFactor - The resample factor we ideally want to use.
+ * \param[in] requiredResampleFactor - The resample factor we ideally want to use, should be != 1.
  * \param[in] maxNumerator - The maximum numerator to allow in the final result.
  * \param[in] maxDenominator - The maximum denominator to allow in the final result.
  * \return A pair containing the upsample factor and the downsample factor.
@@ -48,8 +48,8 @@ namespace dsp
  * met and a suitable pair of resample factors is found.
  */
 inline std::pair<size_t, size_t> ComputeResampleFactors(double requiredResampleFactor,
-                                                 size_t maxNumerator   = 128,
-                                                 size_t maxDenominator = 128)
+                                                        size_t maxNumerator   = 128,
+                                                        size_t maxDenominator = 128)
 {
     DSP_ASSERT_THROW(requiredResampleFactor > 0, "requiredResampleFactor <= 0");
     std::pair<size_t, size_t> factors(0, 0);
@@ -104,11 +104,11 @@ inline std::pair<size_t, size_t> ComputeResampleFactors(double requiredResampleF
     return factors;
 }
 
-/*! \brief Resamplng class uses FIR filter and Kaiser window.
+/*! \brief Resampling class uses FIR filter and Kaiser window.
  *
  * This class is designed to be created upfront and then reused repeatedly to
- * peform ongoing resampling of a given signal and so it creates its internal
- * objects, such as filters, window function and worksapce buffers upfront.
+ * perform ongoing resampling of a given signal and so it creates its internal
+ * objects, such as filters, window function and workspace buffers upfront.
  *
  * Workspace buffers are allocated by this class the first time it resamples signal
  * samples and will only resize the workspace if required on subsequent calls to
@@ -121,12 +121,12 @@ inline std::pair<size_t, size_t> ComputeResampleFactors(double requiredResampleF
  * 1. Fill upsample buffer with signal samples spaced with zero padding samples.
  * 2. Correct for signal attenuation caused by zero padding upsampling.
  * 3. Low pass filter the upsample buffer.
- * 4. Downsample by skipping unrequired samples.
+ * 4. Downsample by skipping not required samples.
  * 5. Return the resampled signal.
  */
 template <typename FloatType> class Resample final
 {
-	/*! \brief Typedef to FilterHolder. */
+    /*! \brief Typedef to FilterHolder. */
     using filter_hldr_t = FilterHolder<FloatType>;
 
 public:
@@ -152,8 +152,10 @@ public:
      * \param[in] maxCutoffFreqHz - The low pass filter max cutoff freq, typically new sample rate /
      * 2 when start freq is 0Hz.
      * \param[in] numFilterTaps - The number of filter coefficients we
-     * require. \param[in] kaiserWindowBeta - Beta parameter controlling side lobes of Kaiser
-     * window. \param[in] useFastConvolution - choose whether to use fast FFT based convolution or
+     * require.
+     * \param[in] kaiserWindowBeta - Beta parameter controlling side lobes of Kaiser
+     * window.
+     * \param[in] useFastConvolution - choose whether to use fast FFT based convolution or
      * not.
      */
     Resample(size_t signalLength, size_t upsampleFactor, size_t downsampleFactor,
@@ -218,7 +220,7 @@ public:
     }
 
     /*!
-     * \brief Get the orignal data size.
+     * \brief Get the original data size.
      * \return The size of the signal data.
      */
     size_t DataSize() const
