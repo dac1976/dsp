@@ -196,6 +196,7 @@ public:
 
     /*!
      * \brief Initialisation method.
+     * \param[in] signalLength - The number of signal samples to be resampled each time.
      * \param[in] upsampleFactor - Factor by which we need to upsample by >= 1.
      * \param[in] downsampleFactor - Factor by which we need to downsample by >= 1.
      * \param[in] samplingFreqHz - Sampling frequency of signal in Hz which we wish to resample.
@@ -206,11 +207,12 @@ public:
      * window. \param[in] useFastConvolution - choose whether to use fast FFT based convolution or
      * not.
      */
-    void Initialise(size_t upsampleFactor, size_t downsampleFactor, FloatType samplingFreqHz,
-                    FloatType maxCutoffFreqHz, size_t numFilterTaps, double kaiserWindowBeta,
-                    bool useFastConvolution)
+    void Initialise(size_t signalLength, size_t upsampleFactor, size_t downsampleFactor,
+                    FloatType samplingFreqHz, FloatType maxCutoffFreqHz, size_t numFilterTaps,
+                    double kaiserWindowBeta, bool useFastConvolution)
     {
-        *this = std::move(Resample(upsampleFactor,
+        *this = std::move(Resample(signalLength,
+                                   upsampleFactor,
                                    downsampleFactor,
                                    samplingFreqHz,
                                    maxCutoffFreqHz,
