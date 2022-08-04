@@ -295,7 +295,7 @@ public:
                 auto upIter     = m_workspaceBuffer.begin();
                 auto resultIter = resultFirst;
 
-                for (auto i = 0; i < m_resampledLength; ++i,
+                for (auto i = 0; (i < m_resampledLength) && (upIter < m_workspaceBuffer.end()); ++i,
                           std::advance(upIter, static_cast<int>(m_downsampleFactor)),
                           std::advance(resultIter, 1))
                 {
@@ -314,11 +314,14 @@ public:
             m_filterHolder(signalFirst, signalLast, m_workspaceBuffer.begin(), true);
 
             // Fill the result buffer by dropping samples as required.
-            auto resultIter = resultFirst;
+            auto   resultIter    = resultFirst;
+            size_t resampleCount = 0;
 
-            for (auto itr = m_workspaceBuffer.begin(); itr < m_workspaceBuffer.end();
+            for (auto itr = m_workspaceBuffer.begin();
+                 (itr < m_workspaceBuffer.end()) && (resampleCount < m_resampledLength);
                  std::advance(itr, static_cast<int>(m_downsampleFactor)),
-                      std::advance(resultIter, 1))
+                      std::advance(resultIter, 1),
+                      ++resampleCount)
             {
                 *resultIter = *itr;
             }
