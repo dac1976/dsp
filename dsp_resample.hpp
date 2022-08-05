@@ -37,6 +37,113 @@ namespace dsp
 {
 
 /*!
+ * \brief Round a floating type's value down to the integer value below, converting to an integer
+ *        type.
+ * \param[in] value - Floating point value to round.
+ * \return Integer value.
+ */
+template <typename FloatT, typename IntegerT> IntegerT FloatToInt(FloatT value)
+{
+    static_assert(std::is_floating_point<FloatT>::value, "invalid floating point type");
+    static_assert(std::is_integral<IntegerT>::value, "invalid integral point type");
+
+    return (value < FloatT(0)) ? IntegerT(std::ceil(value) - 0.5)
+                               : IntegerT(std::floor(value) + 0.5);
+}
+
+/*!
+ * \brief Resample the input range into the output range using linear interpolation.
+ * \param[in] first - First item of source range.
+ * \param[in] last - Last item of source range, same role as end iterator on an STL container.
+ * \param[out] targetFirst - First item of target range.
+ * \param[out] targetLast - Last item of target range, same role as end iterator on an STL
+ * container.
+ *
+ * This function works out the resampling factor from the ratio of the size of the
+ * source range to the target range.
+ */
+template <typename InIter, typename OutIter>
+void ResampleRange(InIter first, InIter last, OutIter targetFirst, OutIter targetLast)
+{
+    // Do we have a valid source range?
+    auto tmpSourceSize = std::distance(first, last);
+
+    DSP_ASSERT_THROW(tmpSourceSize > 0, "std::distance(first, last) <= 0");
+
+    auto tmpTargetSize = std::distance(targetFirst, targetLast);
+
+    DSP_ASSERT_THROW(tmpTargetSize > 0, "std::distance(targetFirst, targetLast) <= 0");
+
+    // Do we need to do any downsampling? If not copy
+    // source range into target vector and return early.
+    const auto sourceSize = static_cast<size_t>(tmpSourceSize);
+    const auto targetSize = static_cast<size_t>(tmpTargetSize);
+
+    if (sourceSize == targetSize)
+    {
+        std::copy(first, last, targetFirst);
+        return;
+    }
+
+    // Work out the exact real-valued sample stride.
+    // This means we can find the exact sample position
+    // in the original data where our resampled value
+    // should be taken from for the downsampled data.
+    // The exact sample position is likely to lie between
+    // 2 given samples of the source data.
+    const auto sampleStride =
+        static_cast<double>(sourceSize - 1) / static_cast<double>(targetSize - 1);
+
+    double exactSamplePos = 0.0;
+    auto   finalItem      = std::next(first, sourceSize - 1);
+
+    // Tracking iterator and sample pos.
+    auto   itrBefore    = first;
+    size_t sampleBefore = 0;
+    size_t pos          = 0;
+    using out_type_t    = typename std::iterator_traits<OutIter>::value_type;
+
+    for (auto outIter = targetFirst; outIter != targetLast; std::advance(outIter, 1), ++pos)
+    {
+        out_type_t interpolatedSample;
+
+        // Keep endpoints as they are.
+        if (0 == pos)
+        {
+            interpolatedSample = *first;
+        }
+        else if (pos == targetSize - 1)
+        {
+            interpolatedSample = *finalItem;
+        }
+        // Downsample into smaller buffer by using
+        // linear interpolation to maintain more
+        // accurate amplitude values.
+        else
+        {
+            // Remember previous sample before last exact pos.
+            const size_t prevSample = sampleBefore;
+            // Find the sample in the source data just
+            // before our exact sample position.
+            sampleBefore = FloatToInt<double, size_t>(exactSamplePos);
+            // Work our the distance of our exact sample position
+            // from the sample before as a ratio.
+            const double ratio = exactSamplePos - double(sampleBefore);
+            std::advance(itrBefore, sampleBefore - prevSample);
+            auto itrAfter = std::next(itrBefore);
+            // Work out an interpolated correction factor to
+            // add to the sample value of the sample before
+            // our exact sample position.
+            const double correction = (*itrAfter - *itrBefore) * ratio;
+            interpolatedSample      = *itrBefore + out_type_t(correction);
+        }
+
+        *outIter = interpolatedSample;
+        exactSamplePos += sampleStride;
+    }
+}
+
+/*!
  * \brief Compute closest resample up and down factors given a real valued resample factor.
  * \param[in] requiredResampleFactor - The resample factor we ideally want to use, should be != 1.
  * \param[in] maxNumerator - The maximum numerator to allow in the final result.
